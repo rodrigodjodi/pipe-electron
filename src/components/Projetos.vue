@@ -1,20 +1,12 @@
 <template>
-  <div class="hello">
-    <h1>PROJETOS</h1>
+  <div>
+    
     <ul>
       <li v-for="projeto in projetos" :key="projeto.codigo">{{projeto.codigo}}_{{projeto.nome}}_{{projeto.cliente}}</li>
     </ul>
-    <input :value="novoProjeto.codigo"
-      @input="novoProjeto.codigo = $event.target.value.toUpperCase()"
-      type="text" name="codigo" id="codigo"
-      placeholder="18CXX" pattern="^[1-2][0-9]C[0-9]{2}$">
-    _
-    <input v-model="novoProjeto.nome" type="text" name="nome" id="nome" placeholder="NOME-PROJETO">
-    _
-    <input v-model="novoProjeto.cliente" type="text" name="cliente" id="cliente" placeholder="CLIENTE">
-    <button @click="adicionaProjeto">Novo Projeto</button>
-    <br/>
-    <button @click="logout">Logout</button>
+    
+
+    
   </div>
 </template>
 

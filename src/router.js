@@ -33,7 +33,8 @@ let router = new Router({
       name: "Projetos",
       component: Projetos,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        title: "Projetos"
       }
     }
   ]
