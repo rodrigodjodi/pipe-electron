@@ -1,12 +1,12 @@
 import Vue from "vue";
-import './plugins/vuetify'
+import "./plugins/vuetify";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import firebase from "@firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 Vue.config.productionTip = false;
 let app;
@@ -27,6 +27,11 @@ firebase.auth().onAuthStateChanged(function(user) {
       store,
       render: h => h(App)
     }).$mount("#app");
+  }
+  if (user) {
+    router.replace("projetos");
+  } else {
+    router.replace("/login");
   }
 });
 export const db = firebase.firestore();

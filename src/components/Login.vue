@@ -1,38 +1,33 @@
 <template>
   <div class="login">
     <h3>Login</h3>
-    <input type="text" v-model="email" placeholder="Email"><br>
-    <input type="password" v-model="password" placeholder="Password"><br>
-    <button v-on:click="signIn">Entrar</button>
+    <input 
+      v-model="payload.email" 
+      type="text" 
+      placeholder="Email"><br>
+    <input 
+      v-model="payload.password" 
+      type="password" 
+      placeholder="Password"><br>
+    <button @click="signIn(payload)">Entrar</button>
     <p>Não tem uma conta? <router-link to="/sign-up">Crie uma</router-link></p>
   </div>
 </template>
 
 <script>
-import firebase from "@firebase/app";
-
+import { mapActions } from "vuex";
 export default {
-  name: "login",
+  name: "Login",
   data: function() {
     return {
-      email: "",
-      password: ""
+      payload: {
+        email: "",
+        password: ""
+      }
     };
   },
   methods: {
-    signIn: function() {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            this.$router.replace("projetos");
-          },
-          err => {
-            alert("Oops. " + err.message);
-          }
-        );
-    }
+    ...mapActions(["signIn"])
   }
 };
 </script>
