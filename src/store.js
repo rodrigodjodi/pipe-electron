@@ -6,6 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    //USER
+    user: null,
     //INTERFACE
     navItems: [
       { title: "Projetos", icon: "chrome_reader_mode", route: "/projetos" },
@@ -14,7 +16,11 @@ export default new Vuex.Store({
       { title: "Horas", icon: "schedule", route: "/horas" }
     ]
   },
-  mutations: {},
+  mutations: {
+    SET_USER(state, payload) {
+      state.user = payload;
+    }
+  },
   actions: {
     //USER ACTIONS
     /* eslint-disable no-empty-pattern */

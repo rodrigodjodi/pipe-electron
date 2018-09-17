@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire" dark>
-    <v-navigation-drawer
+    <v-navigation-drawer v-if="user"
       v-model="drawer"
       :mini-variant.sync="mini"
       fixed
@@ -49,7 +49,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar 
+    <v-toolbar v-if="user"
       color="blue-grey" 
       dark 
       fixed 
@@ -60,7 +60,7 @@
       <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight"/>
     </v-toolbar>
 
-    <v-navigation-drawer
+    <v-navigation-drawer v-if="user"
       v-model="drawerRight"
       fixed
       right
@@ -107,7 +107,8 @@ export default {
       return this.$route.meta.rightDrawerComponent;
     },
     ...mapState({
-      navItems: state => state.navItems
+      navItems: state => state.navItems,
+      user: state => state.user
     })
 
   }

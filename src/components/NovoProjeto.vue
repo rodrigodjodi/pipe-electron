@@ -82,10 +82,6 @@ export default {
     valor: "",
     valorRules: [v => !!v || "Valor é obrigatório"]
   }),
-  methods: {
-    capitalize(val) {
-      return val.toUpperCase();
-    }
-  }
+  methods: {}
 };
 </script>
