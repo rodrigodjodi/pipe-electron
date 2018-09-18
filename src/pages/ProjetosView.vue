@@ -7,7 +7,8 @@
         <ul>
           <li 
             v-for="projeto in projetos" 
-            :key="projeto.codigo">{{ projeto.codigo }}_{{ projeto.nome }}_{{ projeto.cliente }}</li>
+            :key="projeto.codigo"
+          >{{ projeto.codigo }}_{{ projeto.nome }}_{{ projeto.cliente }}</li>
         </ul>
       </v-layout>
     </v-slide-y-transition>
@@ -15,30 +16,15 @@
 </template>
 
 <script>
-import { capitalize } from "../assets/filters";
-import { mapActions } from "vuex";
-import { db } from "../main";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "Projetos",
-    filters: {
-      capitalize
-    },
-  data() {
-    return {
-      projetos: []
-    };
+  computed: {
+    ...mapState(["projetos"])
   },
-    created() {
-      db.collection("projetos")
-        .get()
-        .then(snap => {
-          snap.forEach(doc => {
-            let newProject = doc.data();
-            newProject.codigo = doc.id;
-            this.projetos.push(newProject);
-          });
-        });
-    },
+  created() {
+    this.$store.dispatch('listaProjetos');
+  },
   methods: {},
 };
 </script>

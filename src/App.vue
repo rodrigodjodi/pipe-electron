@@ -4,6 +4,7 @@
       v-model="drawer"
       :mini-variant.sync="mini"
       fixed
+      permanent
       app
     >
       <v-toolbar
@@ -52,17 +53,40 @@
     <v-toolbar v-if="user"
       color="blue-grey" 
       dark 
-      fixed 
+       clipped-right
+       clipped-left
       app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"/>
+      <v-avatar style="margin-left:-12px;">
+      <img
+        src="http://pipe3d.com.br/ui/pipe-icon96.png"
+        alt="Usuário"
+      >
+    </v-avatar>
+      
+      <v-btn icon @click.stop="mini = !mini">
+        <v-icon>{{mini ? "chevron_right" : "chevron_left"}}</v-icon>
+      </v-btn>
       <v-toolbar-title>{{ $route.meta.title }}</v-toolbar-title>
       <v-spacer/>
-      <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight"/>
+      <v-btn icon v-if="!drawerRight" @click.stop="drawerRight = true">
+        <v-icon>add</v-icon>
+      </v-btn>
+      <v-menu bottom left>
+        <v-avatar slot="activator">
+          <v-icon dark>account_circle</v-icon>
+        </v-avatar>
+        <v-list>
+          <v-list-tile @click="logout">
+            <v-list-tile-title>Sair</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar>
 
     <v-navigation-drawer v-if="user"
+    clipped
       v-model="drawerRight"
-      fixed
+      
       right
       app
     >
@@ -78,6 +102,7 @@
       class="white--text" 
       app>
       <span>Pipe Studio</span>
+      <span ref="tooltip"></span>
       <v-spacer/>
       <span>&copy; 2018</span>
     </v-footer>
@@ -85,7 +110,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "App",
   components: {
@@ -110,7 +135,9 @@ export default {
       navItems: state => state.navItems,
       user: state => state.user
     })
-
+  },
+  methods: {
+    ...mapActions(["logout"])
   }
 };
 </script>

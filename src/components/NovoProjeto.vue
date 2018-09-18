@@ -20,13 +20,13 @@
           </v-list-tile>
         </v-list>
       </v-toolbar>
-    <v-form 
+    <v-form ref="form"
       v-model="valid" 
       class="px-2">
       <v-text-field
-        @input="codigo = $event.toUpperCase()"
-        :value="codigo"
-        :rules="codigoRules"
+        @input="payload.codigo = $event.toUpperCase()"
+        :value="payload.codigo"
+        :rules="rules.codigo"
         label="Código"
         hint="18CXX"
         persistent-hint
@@ -34,30 +34,37 @@
         required
       />
       <v-text-field
-      @input="projeto = $event.toUpperCase()"
-        :value="projeto"
-        :rules="nameRules"
+      @input="payload.projeto = $event.toUpperCase()"
+        :value="payload.projeto"
+        :rules="rules.nome"
         :counter="16"
         label="Projeto"
         hint="NOME-PROJETO"
         required
       />
       <v-text-field
-        @input="cliente = $event.toUpperCase()"
-        :value="cliente"
-        :rules="nameRules"
+        @input="payload.cliente = $event.toUpperCase()"
+        :value="payload.cliente"
+        :rules="rules.nome"
         :counter="16"
         label="Cliente"
         hint="NOME-CLIENTE"
         required
       />
       <v-text-field
-        v-model="valor"
+        v-model="payload.valor"
 
         label="Valor"
-        reverse
+        
         required
       />
+      <v-btn @click="clear">limpar</v-btn>
+      <v-btn
+      :disabled="!valid"
+      @click="$store.dispatch('novoProjeto', payload)"
+      >
+        criar projeto
+      </v-btn>
     </v-form>
   </v-layout>
 </template>
@@ -67,21 +74,30 @@ export default {
   name: "NovoProjeto",
   data: () => ({
     valid: false,
-    codigo: "",
-    codigoRules: [
-      v => !!v || "Código é obrigatório",
-      //todo fazer verificação se o código é único
-      v => v.match("^[1-2][0-9]C[0-9]{2}$") ? true : "Padrão incorreto."
-    ],
-    projeto: "",
-    cliente: "",
-    nameRules: [
-      v => !!v || "Esse campo é obrigatório.",
-      v => v.match("^[A-Z0-9-]{2,16}$") ? true : "Padrão incorreto."
-    ],
-    valor: "",
-    valorRules: [v => !!v || "Valor é obrigatório"]
+    payload: {
+      codigo: "",
+      projeto: "",
+      cliente: "",
+      valor: "",
+    },
+    rules: {
+      codigo: [
+        v => !!v || "Código é obrigatório",
+        //todo fazer verificação se o código é único
+        v => v.match("^[1-2][0-9]C[0-9]{2}$") ? true : "Padrão incorreto."
+      ],
+      nome: [
+        v => !!v || "Esse campo é obrigatório.",
+        v => v.match("^[A-Z0-9-]{2,16}$") ? true : "Padrão incorreto."
+      ],
+      valor: [v => !!v || "Valor é obrigatório"]
+    }
   }),
-  methods: {}
+  methods: {
+    clear () {
+      this.$refs.form.reset();
+    },
+
+  }
 };
 </script>
