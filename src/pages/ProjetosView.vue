@@ -4,12 +4,18 @@
       <v-layout 
         column 
         align-center>
-        <ul>
-          <li 
-            v-for="projeto in projetos" 
-            :key="projeto.codigo"
-          >{{ projeto.codigo }}_{{ projeto.nome }}_{{ projeto.cliente }}</li>
-        </ul>
+        <v-data-table
+          :items="projetos"
+          class="elevation-1"
+          hide-actions
+          hide-headers
+        >
+          <template slot="items" slot-scope="props">
+            <td>{{props.item.codigo+"_"+props.item.nome+"_"+props.item.cliente}}</td>
+            <td>{{props.item.valor}}</td>
+            <td>{{props.item.status}}</td>
+          </template>
+        </v-data-table>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -23,34 +29,11 @@ export default {
     ...mapState(["projetos"])
   },
   created() {
-    this.$store.dispatch('listaProjetos');
+    this.$store.dispatch("listaProjetos");
   },
-  methods: {},
+  methods: {}
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1,
-h2 {
-  font-weight: normal;
-}
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-#codigo {
-  width: 6ch;
-  /*text-transform: uppercase;*/
-}
-</style>
