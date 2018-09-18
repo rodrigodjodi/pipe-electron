@@ -22,6 +22,15 @@ export default new Vuex.Store({
   mutations: {
     SET_USER(state, payload) {
       state.user = payload;
+    },
+    //PROJETOS
+    PROCESSA_SNAPSHOT(state, snap) {
+      state.projetos = [];
+      snap.forEach(doc => {
+        let newProject = doc.data();
+        newProject.codigo = doc.id;
+        state.projetos.push(newProject);
+      });
     }
   },
   actions: {
@@ -36,19 +45,22 @@ export default new Vuex.Store({
       firebase.auth().signOut();
     },
     //AÇÕES DE PROJETO
-    listaProjetos({ state }) {
-      db.collection("projetos")
-        .get()
-        .then(snap => {
-          snap.forEach(doc => {
-            let newProject = doc.data();
-            newProject.codigo = doc.id;
-            state.projetos.push(newProject);
-          });
-        });
+    listaProjetos({ commit }) {
+      db.collection("projetos").onSnapshot(snap => {
+        commit("PROCESSA_SNAPSHOT", snap);
+      });
     },
     novoProjeto({}, payload) {
-      console.log(payload);
+      return db
+        .collection("projetos")
+        .doc(payload.codigo)
+        .set({
+          nome: payload.projeto,
+          cliente: payload.cliente,
+          status: "Ativo",
+          valor: payload.valor,
+          criado: firebase.firestore.FieldValue.serverTimestamp()
+        });
     }
   }
 });

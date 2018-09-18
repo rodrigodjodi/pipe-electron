@@ -61,7 +61,7 @@
       <v-btn @click="clear">limpar</v-btn>
       <v-btn
       :disabled="!valid"
-      @click="$store.dispatch('novoProjeto', payload)"
+      @click="novoProjeto"
       >
         criar projeto
       </v-btn>
@@ -95,9 +95,25 @@ export default {
   }),
   methods: {
     clear () {
-      this.$refs.form.reset();
+      this.payload = {
+        codigo: "",
+        projeto: "",
+        cliente: "",
+        valor: "",
+      }
     },
-
+    novoProjeto() {
+      this.$store.dispatch('novoProjeto', this.payload)
+      .then(() => {
+        //TODO: notificação de confirmação
+        this.clear();
+        this.$emit("close");
+      })
+      .catch((err) => {
+        //TODO: tratamento de erro na interface
+        console.error("Problema na criação: " + err)
+      })
+    }
   }
 };
 </script>
