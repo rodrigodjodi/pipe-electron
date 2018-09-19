@@ -7,7 +7,8 @@ import firebase from "@firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
-
+import money from "@/assets/v-money";
+Vue.use(money);
 Vue.config.productionTip = false;
 let app;
 let config = {

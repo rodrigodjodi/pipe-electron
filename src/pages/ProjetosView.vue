@@ -11,7 +11,10 @@
           hide-headers
         >
           <template slot="items" slot-scope="props">
-            <td>{{props.item.codigo+"_"+props.item.nome+"_"+props.item.cliente}}</td>
+            <td>{{props.item.codigo
+              +"_"+props.item.nome
+              +"_"+props.item.cliente}}
+            </td>
             <td>{{props.item.valor}}</td>
             <td>{{props.item.status}}</td>
           </template>

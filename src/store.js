@@ -58,7 +58,7 @@ export default new Vuex.Store({
           nome: payload.projeto,
           cliente: payload.cliente,
           status: "Ativo",
-          valor: payload.valor,
+          valor: payload.valor.replace(/([^0-9]+)/g, "") * 1,
           criado: firebase.firestore.FieldValue.serverTimestamp()
         });
     }

@@ -53,7 +53,7 @@
       />
       <v-text-field
         v-model="payload.valor"
-
+        v-money
         label="Valor"
         
         required
@@ -70,6 +70,9 @@
 </template>
 
 <script>
+
+
+
 export default {
   name: "NovoProjeto",
   data: () => ({
@@ -78,7 +81,7 @@ export default {
       codigo: "",
       projeto: "",
       cliente: "",
-      valor: "",
+      valor: 0,
     },
     rules: {
       codigo: [
