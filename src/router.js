@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Projetos from "@/pages/ProjetosView";
+import Projeto from "@/pages/ProjetoView";
 import Caixa from "@/pages/CaixaView";
 import Login from "@/components/Login";
 import SignUp from "@/components/SignUp";
@@ -30,13 +31,23 @@ let router = new Router({
       component: SignUp
     },
     {
-      path: "/projetos",
+      path: "/projetos/",
       name: "Projetos",
       component: Projetos,
       meta: {
         requiresAuth: true,
         title: "Projetos",
-        rightDrawerComponent: "NovoProjeto"
+        rightDrawerComponent: "FormProjeto"
+      }
+    },
+    {
+      path: "/projetos/:id",
+      name: "Projeto",
+      component: Projeto,
+      meta: {
+        requiresAuth: true,
+        title: "Projeto",
+        rightDrawerComponent: "FormProjeto"
       }
     },
     {

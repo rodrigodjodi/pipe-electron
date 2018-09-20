@@ -58,7 +58,7 @@
         
         required
       />
-      <v-btn @click="clear">limpar</v-btn>
+      <v-btn flat @click="clear">limpar</v-btn>
       <v-btn
       :disabled="!valid"
       @click="novoProjeto"
@@ -66,6 +66,23 @@
         criar projeto
       </v-btn>
     </v-form>
+    
+    <v-snackbar
+      v-model="displayAlert"
+      :color="alertType"
+      :timeout="alertTimeout"
+      auto-height
+      bottom
+    >
+      {{ alertMsg }}
+      <v-btn
+        flat
+        @click="displayAlert = false"
+      >
+        Fechar
+      </v-btn>
+    </v-snackbar>
+    
   </v-layout>
 </template>
 
@@ -76,6 +93,10 @@
 export default {
   name: "NovoProjeto",
   data: () => ({
+    displayAlert: false,
+    alertType: "success",
+    alertMsg: "",
+    alertTimeout: 2500,
     valid: false,
     payload: {
       codigo: "",
@@ -108,12 +129,19 @@ export default {
     novoProjeto() {
       this.$store.dispatch('novoProjeto', this.payload)
       .then(() => {
-        //TODO: notificação de confirmação
+        // notificação de confirmação
         this.clear();
-        this.$emit("close");
+        this.alertType = "success";
+        this.alertMsg = "Projeto incluído com sucesso.";
+        this.alertTimeout = 2500;
+        this.displayAlert = true;
       })
       .catch((err) => {
-        //TODO: tratamento de erro na interface
+        // notificação de erro 
+        this.alertType = "error";
+        this.alertMsg = "Problema na criação: " + err
+        this.alertTimeout = 0;
+        this.displayAlert = true;
         console.error("Problema na criação: " + err)
       })
     }

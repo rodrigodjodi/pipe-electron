@@ -1,39 +1,16 @@
 <template>
   <v-app id="inspire" dark>
+<!-- DRAWER ESQUERDA -->
     <v-navigation-drawer v-if="user"
       v-model="drawer"
       :mini-variant.sync="mini"
+      mini-variant-width="80"
       fixed
       permanent
       app
+      clipped
     >
-      <v-toolbar
-     
-        flat 
-        class="transparent">
-        <v-list class="pa-0">
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <v-icon>person</v-icon>
-            </v-list-tile-avatar>
-
-            <v-list-tile-content>
-              <v-list-tile-title>Rodrigo López Moreira</v-list-tile-title>
-            </v-list-tile-content>
-
-            <v-list-tile-action>
-              <v-btn
-                icon
-                @click.stop="mini = !mini"
-              >
-                <v-icon>chevron_left</v-icon>
-              </v-btn>
-            </v-list-tile-action>
-          </v-list-tile>
-        </v-list>
-      </v-toolbar>
-      <v-list class="pt-0">
-        <v-divider/>
+      <v-list>
         <v-list-tile
           v-for="item in navItems"
           :key="item.title"
@@ -49,23 +26,20 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-
+<!-- TOOLBAR TOPO -->
     <v-toolbar v-if="user"
       color="blue-grey" 
       dark 
        clipped-right
        clipped-left
       app>
-      <v-avatar style="margin-left:-12px;">
+      <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
+      <v-avatar style="margin-left:36px;">
       <img
         src="http://pipe3d.com.br/ui/pipe-icon96.png"
         alt="Usuário"
       >
     </v-avatar>
-      
-      <v-btn icon @click.stop="mini = !mini">
-        <v-icon>{{mini ? "chevron_right" : "chevron_left"}}</v-icon>
-      </v-btn>
       <v-toolbar-title>{{ $route.meta.title }}</v-toolbar-title>
       <v-spacer/>
       <v-btn icon v-if="!drawerRight" @click.stop="drawerRight = true">
@@ -82,11 +56,10 @@
         </v-list>
       </v-menu>
     </v-toolbar>
-
+<!-- DRAWER DIREITA -->
     <v-navigation-drawer v-if="user"
     clipped
       v-model="drawerRight"
-      
       right
       app
     >
@@ -114,8 +87,8 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "App",
   components: {
-    NovoProjeto: () =>
-      import("@/components/NovoProjeto")
+    FormProjeto: () =>
+      import("@/components/FormProjeto")
   },
   props: {
     source: String
