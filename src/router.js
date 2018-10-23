@@ -6,11 +6,14 @@ import Projeto from "@/pages/ProjetoView";
 import Caixa from "@/pages/CaixaView";
 import Login from "@/components/Login";
 import SignUp from "@/components/SignUp";
+import FormProjeto from "@/components/FormProjeto";
+import FormItemProjeto from "@/components/FormItemProjeto";
 import firebase from "@firebase/app";
 
 Vue.use(Router);
 
 let router = new Router({
+  mode: "history",
   routes: [
     {
       path: "*",
@@ -33,21 +36,19 @@ let router = new Router({
     {
       path: "/projetos/",
       name: "Projetos",
-      component: Projetos,
+      components: { default: Projetos, rightDrawer: FormProjeto },
       meta: {
         requiresAuth: true,
-        title: "Projetos",
-        rightDrawerComponent: "FormProjeto"
+        title: "Projetos"
       }
     },
     {
       path: "/projetos/:id",
       name: "Projeto",
-      component: Projeto,
+      components: { default: Projeto, rightDrawer: FormItemProjeto },
       meta: {
         requiresAuth: true,
-        title: "Projeto",
-        rightDrawerComponent: "FormProjeto"
+        title: "Projeto"
       }
     },
     {

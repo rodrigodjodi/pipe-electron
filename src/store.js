@@ -18,7 +18,9 @@ export default new Vuex.Store({
     ],
     //PROJETOS
     projetos: [],
-    projetoCorrente: null
+    projetoCorrente: null,
+    //Itens
+    itensProjetoCorrente: null
   },
 
   mutations: {
@@ -26,7 +28,7 @@ export default new Vuex.Store({
       state.user = payload;
     },
     //PROJETOS
-    PROCESSA_SNAPSHOT(state, snap) {
+    PROCESSA_SNAPSHOT_PROJETOS(state, snap) {
       state.projetos = [];
       snap.forEach(doc => {
         let newProject = doc.data();
@@ -36,6 +38,15 @@ export default new Vuex.Store({
     },
     PROJETO_CORRENTE(state, projeto) {
       state.projetoCorrente = projeto;
+    },
+    //ITENS
+    PROCESSA_SNAPSHOT_ITEMS(state, snap) {
+      state.itensProjetoCorrente = [];
+      snap.forEach(doc => {
+        let newItem = doc.data();
+        newItem.codigo = doc.id;
+        state.itensProjetoCorrente.push(newItem);
+      });
     }
   },
 
@@ -54,7 +65,7 @@ export default new Vuex.Store({
     //AÇÕES DE PROJETO
     listaProjetos({ commit }) {
       db.collection("projetos").onSnapshot(snap => {
-        commit("PROCESSA_SNAPSHOT", snap);
+        commit("PROCESSA_SNAPSHOT_PROJETOS", snap);
       });
     },
     getProjeto({ commit }, projeto) {
@@ -66,6 +77,14 @@ export default new Vuex.Store({
             let projetoCorrente = doc.data();
             projetoCorrente.codigo = projeto;
             commit("PROJETO_CORRENTE", projetoCorrente);
+            // retorna outra Promise com a pesquisa dos itens
+            return db
+              .collection("projetos")
+              .doc(projeto)
+              .collection("items")
+              .onSnapshot(snap => {
+                commit("PROCESSA_SNAPSHOT_ITEMS", snap);
+              });
           } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -86,6 +105,36 @@ export default new Vuex.Store({
           valor: payload.valor.replace(/([^0-9]+)/g, "") * 1,
           criado: firebase.firestore.FieldValue.serverTimestamp()
         });
-    }
+    },
+    //Ações de itens
+    createDefaultItems({ state }, payload) {
+      var batch = db.batch();
+      Object.keys(payload).forEach(tipoItem => {
+        if (payload[tipoItem].valor > 0) {
+          for (let i = 1; i <= payload[tipoItem].valor; i++) {
+            let idTipo = `${state.projetoCorrente.codigo}_${
+              payload[tipoItem].grupo
+            }.${i}`;
+            let itemRef = db
+              .collection("projetos")
+              .doc(state.projetoCorrente.codigo)
+              .collection("items")
+              .doc(idTipo);
+            batch.set(itemRef, {
+              nome: `${payload[tipoItem].grupo}.${i} ${payload[tipoItem].label}`
+            });
+          }
+        }
+      });
+      batch
+        .commit()
+        .then(function() {
+          // ...
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    },
+    listaItens() {}
   }
 });

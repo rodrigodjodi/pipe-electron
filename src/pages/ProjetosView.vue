@@ -11,7 +11,8 @@
           hide-headers
         >
           <template slot="items" slot-scope="props">
-            <td>{{props.item.codigo
+            <td class="link-to-project-page" @click="$router.push(`projetos/${props.item.codigo}`)">
+              {{props.item.codigo
               +"_"+props.item.nome
               +"_"+props.item.cliente}}
             </td>
@@ -38,5 +39,14 @@ export default {
 };
 </script>
 
+<style>
+.link-to-project-page {
+  cursor: pointer;
+  user-select: none;
+}
+.link-to-project-page:hover {
+  color: #1976d2;
+}
+</style>
 
 

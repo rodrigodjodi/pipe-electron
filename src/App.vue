@@ -63,7 +63,7 @@
       right
       app
     >
-      <component :is="rightDrawer" @close="drawerRight=false"></component>
+      <router-view name="rightDrawer" @close="drawerRight=false"></router-view>
     </v-navigation-drawer>
     
     <v-content>
@@ -86,19 +86,14 @@
 import { mapState, mapActions } from "vuex";
 export default {
   name: "App",
-  components: {
-    FormProjeto: () =>
-      import("@/components/FormProjeto")
-  },
+  components: {},
   props: {
     source: String
   },
   data: () => ({
     drawer: true,
     drawerRight: false,
-    right: null,
-    left: null,
-    mini: true,
+    mini: true
   }),
   computed: {
     rightDrawer() {
