@@ -24,6 +24,7 @@
                 type="password"
                 required
                 :rules="rules.password"
+                @keyup.enter="signIn(payload)"
               ></v-text-field>
             </v-form>
           </v-card-text>
@@ -69,12 +70,12 @@ export default {
       rules: {
         //todo: fazer direito regras e mensagens
         email: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid'
+          v => !!v || "E-mail is required",
+          v => /.+@.+/.test(v) || "E-mail must be valid"
         ],
         password: [
-          v => !!v || 'Name is required',
-          v => v.length <= 10 || 'Name must be less than 10 characters'
+          v => !!v || "Name is required",
+          v => v.length <= 10 || "Name must be less than 10 characters"
         ]
       }
     };
