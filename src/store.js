@@ -6,6 +6,7 @@ import { db } from "./main";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  strict: false,
   state: {
     //USER
     user: null,
@@ -41,11 +42,36 @@ export default new Vuex.Store({
     },
     //ITENS
     PROCESSA_SNAPSHOT_ITEMS(state, snap) {
-      state.itensProjetoCorrente = [];
+      state.itensProjetoCorrente = {
+        briefing: {
+          label: "Briefing",
+          items: []
+        },
+        modelagem: {
+          label: "Modelagem",
+          items: []
+        },
+        composicao: {
+          label: "Composição",
+          items: []
+        },
+        revisao: {
+          label: "Revisão",
+          items: []
+        },
+        cliente: {
+          label: "Cliente",
+          items: []
+        },
+        aprovado: {
+          label: "Aprovado",
+          items: []
+        }
+      };
       snap.forEach(doc => {
         let newItem = doc.data();
         newItem.codigo = doc.id;
-        state.itensProjetoCorrente.push(newItem);
+        state.itensProjetoCorrente[newItem.lista].items.push(newItem);
       });
     }
   },

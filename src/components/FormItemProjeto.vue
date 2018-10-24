@@ -27,7 +27,7 @@
       class="px-2"
     >
         <v-text-field v-for="(value, key) in tipos" :key="key"
-            :label="tipos[key]['label']"
+            :label="tipos[key]['label']+':'"
             v-model.number="tipos[key].valor"
             prepend-icon="remove"
             @click:prepend="decrement(key)"
@@ -58,30 +58,30 @@ export default {
     return {
       valid: false,
       tipos: {
-        externas: { valor: 0, label: "Perspectiva externa:", grupo: "1" },
+        externas: { valor: 0, label: "Perspectiva externa", grupo: "1" },
         internasAreasComuns: {
           valor: 0,
-          label: "Interna área comun:",
+          label: "Interna área comum",
           grupo: "2"
         },
         internasAreasPrivativas: {
           valor: 0,
-          label: "Interna área privativa:",
+          label: "Interna área privativa",
           grupo: "3"
         },
         plantasHumanizadasPavimento: {
           valor: 0,
-          label: "Planta pavimento:",
+          label: "Planta pavimento",
           grupo: "4"
         },
         plantasHumanizadasApto: {
           valor: 0,
-          label: "Planta unidade:",
+          label: "Planta unidade",
           grupo: "5"
         },
-        pontoTour360: { valor: 0, label: "Ponto tour 360:", grupo: "6" },
-        maqueteVirtual: { valor: 0, label: "Maquete virtual:", grupo: "7" },
-        video: { valor: 0, label: "Video (segundos):", grupo: "8" }
+        pontoTour360: { valor: 0, label: "Ponto tour 360", grupo: "6" },
+        maqueteVirtual: { valor: 0, label: "Maquete virtual", grupo: "7" },
+        video: { valor: 0, label: "Video (segundos)", grupo: "8" }
       }
     };
   },
