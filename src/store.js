@@ -147,7 +147,10 @@ export default new Vuex.Store({
               .collection("items")
               .doc(idTipo);
             batch.set(itemRef, {
-              nome: `${payload[tipoItem].grupo}.${i} ${payload[tipoItem].label}`
+              nome: `${payload[tipoItem].grupo}.${i} ${
+                payload[tipoItem].label
+              }`,
+              lista: "briefing"
             });
           }
         }
@@ -161,6 +164,13 @@ export default new Vuex.Store({
           console.error(err);
         });
     },
-    listaItens() {}
+    updateItem({ state }, payload) {
+      let ref = db
+        .collection("projetos")
+        .doc(state.projetoCorrente.codigo)
+        .collection("items")
+        .doc(payload.id);
+      return ref.update({ lista: payload.lista });
+    }
   }
 });
