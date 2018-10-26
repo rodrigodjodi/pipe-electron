@@ -10,7 +10,7 @@
       app
       clipped
     >
-      <v-list>
+      <v-list expand>
         <v-list-tile
           v-for="item in navItems"
           :key="item.title"
@@ -33,14 +33,16 @@
        clipped-right
        clipped-left
       app>
-      <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
-      <v-avatar style="margin-left:36px;">
-      <img
-        src="http://pipe3d.com.br/ui/pipe-icon96.png"
-        alt="Usuário"
-      >
-    </v-avatar>
-      <v-toolbar-title>{{ $route.meta.title }}</v-toolbar-title>
+      <v-btn icon>
+        <v-icon @click.stop="tollbarIconAction">{{tollbarIcon}}</v-icon>
+      </v-btn>
+      <v-avatar>
+        <img
+          src="http://pipe3d.com.br/ui/pipe-icon96.png"
+          alt="Logo Pipe"
+        >
+      </v-avatar>
+      <v-toolbar-title>{{ $route.meta.title || $store.state.title}}</v-toolbar-title>
       <v-spacer/>
       <v-btn icon v-if="!drawerRight" @click.stop="drawerRight = true">
         <v-icon>add</v-icon>
@@ -102,10 +104,22 @@ export default {
     ...mapState({
       navItems: state => state.navItems,
       user: state => state.user
-    })
+    }),
+    tollbarIcon() {
+      return Object.keys(this.$route.params).length ? "arrow_back" : "menu";
+    }
   },
   methods: {
-    ...mapActions(["logout"])
+    ...mapActions(["logout"]),
+    tollbarIconAction() {
+      // Se a rota  tem parâmetros
+      if (Object.keys(this.$route.params).length) {
+        //Faça voltar
+        this.$router.go(-1);
+      } else {
+        this.mini = !this.mini;
+      }
+    }
   }
 };
 </script>
