@@ -17,6 +17,7 @@ export default new Vuex.Store({
       { title: "Notas", icon: "receipt", route: "/notas" },
       { title: "Horas", icon: "schedule", route: "/horas" }
     ],
+    title: "",
     //PROJETOS
     projetos: [],
     projetoCorrente: null,
@@ -25,6 +26,9 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    SET_TITLE(state, payload) {
+      state.title = payload;
+    },
     SET_USER(state, payload) {
       state.user = payload;
     },
@@ -37,42 +41,21 @@ export default new Vuex.Store({
         state.projetos.push(newProject);
       });
     },
-    PROJETO_CORRENTE(state, projeto) {
+    SET_PROJETO_CORRENTE(state, projeto) {
       state.projetoCorrente = projeto;
     },
     //ITENS
     PROCESSA_SNAPSHOT_ITEMS(state, snap) {
-      state.itensProjetoCorrente = {
-        briefing: {
-          label: "Briefing",
-          items: []
-        },
-        modelagem: {
-          label: "Modelagem",
-          items: []
-        },
-        composicao: {
-          label: "Composição",
-          items: []
-        },
-        revisao: {
-          label: "Revisão",
-          items: []
-        },
-        cliente: {
-          label: "Cliente",
-          items: []
-        },
-        aprovado: {
-          label: "Aprovado",
-          items: []
-        }
-      };
-      snap.forEach(doc => {
-        let newItem = doc.data();
-        newItem.codigo = doc.id;
-        state.itensProjetoCorrente[newItem.lista].items.push(newItem);
-      });
+      if (!snap) {
+        state.itensProjetoCorrente = null;
+      } else {
+        state.itensProjetoCorrente = [];
+        snap.forEach(doc => {
+          let newItem = doc.data();
+          newItem.codigo = doc.id;
+          state.itensProjetoCorrente.push(newItem);
+        });
+      }
     }
   },
 
@@ -89,35 +72,22 @@ export default new Vuex.Store({
       firebase.auth().signOut();
     },
     //AÇÕES DE PROJETO
-    listaProjetos({ commit }) {
+    listaProjetos({ commit, state }, project_id) {
       db.collection("projetos").onSnapshot(snap => {
         commit("PROCESSA_SNAPSHOT_PROJETOS", snap);
+        if (project_id) {
+          var projeto = state.projetos.find(el => el.codigo === project_id);
+          commit("SET_PROJETO_CORRENTE", projeto);
+        }
       });
     },
-    getProjeto({ commit }, projeto) {
-      db.collection("projetos")
+    getItensProjeto({ commit }, projeto) {
+      return db
+        .collection("projetos")
         .doc(projeto)
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            let projetoCorrente = doc.data();
-            projetoCorrente.codigo = projeto;
-            commit("PROJETO_CORRENTE", projetoCorrente);
-            // retorna outra Promise com a pesquisa dos itens
-            return db
-              .collection("projetos")
-              .doc(projeto)
-              .collection("items")
-              .onSnapshot(snap => {
-                commit("PROCESSA_SNAPSHOT_ITEMS", snap);
-              });
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch(function(error) {
-          console.log("Error getting document:", error);
+        .collection("items")
+        .onSnapshot(snap => {
+          commit("PROCESSA_SNAPSHOT_ITEMS", snap);
         });
     },
     novoProjeto({}, payload) {
