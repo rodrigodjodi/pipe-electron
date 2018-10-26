@@ -33,7 +33,7 @@ export default {
     ...mapState(["projetos"])
   },
   created() {
-    this.$store.dispatch("listaProjetos");
+    if (!this.projetos.length) this.$store.dispatch("listaProjetos");
   },
   methods: {}
 };
