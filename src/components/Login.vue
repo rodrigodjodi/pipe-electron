@@ -40,24 +40,9 @@
       </v-layout>
     </v-slide-y-transition>
   </v-container>
-  <!--
-  <div class="login">
-    <h3>Login</h3>
-    <input 
-      v-model="payload.email" 
-      type="text" 
-      placeholder="Email"><br>
-    <input 
-      v-model="payload.password" 
-      type="password" 
-      placeholder="Password"><br>
-    <button @click="signIn(payload)">Entrar</button>
-    
-  -->
 </template>
 
 <script>
-import { mapActions } from "vuex";
 export default {
   name: "Login",
   data: function() {
@@ -81,7 +66,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["signIn"])
+    signIn() {
+      this.$store.dispatch("signIn", this.payload).then(() => {
+        this.$router.replace("/projetos");
+      });
+    }
   }
 };
 </script>
