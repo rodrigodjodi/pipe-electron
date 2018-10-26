@@ -2,12 +2,14 @@
         <!-- <h1>{{`${projetoCorrente.codigo}_${projetoCorrente.nome}_${projetoCorrente.cliente}`}}</h1> -->
   <v-container  fluid fill-height class="manual-overflow">
       <v-layout>
-        <draggable v-for="(lista, k) in itensProjetoCorrente" :key="k" class="etapa"
-          :id="k" v-model="itensProjetoCorrente[k].items"
-          :options="{group:'items', sort:false, chosenClass:'elevation-7'}" @end="onEnd"
+        <draggable v-for="(lista, k) in listas" :key="k" class="etapa"
+          :id="k" v-model="listas[k].items"
+          :options="{group:'items', sort:false, chosenClass:'elevation-7'}" @end="onDragEnd"
         >
           <span class="subheading font-weight-thin text-capitalize">{{lista.label}}</span>
-          <CardItem class="elevation-1" v-for="item in itensProjetoCorrente[k].items" :key="item.codigo" :id="item.codigo">
+          <CardItem class="elevation-1" v-for="item in listas[k].items" :key="item.codigo" :id="item.codigo"
+            :linkTo="{path: item.codigo}"
+          >
            
               {{item.nome}}
             
@@ -22,20 +24,87 @@
 import { mapState, mapActions } from "vuex";
 import draggable from "vuedraggable";
 import CardItem from "@/components/CardItem";
+var unsubscribe;
 export default {
   components: { draggable, CardItem },
   name: "Projeto",
   data() {
-    return {};
+    return {
+      listas: {
+        briefing: {
+          label: "Briefing",
+          items: []
+        },
+        modelagem: {
+          label: "Modelagem",
+          items: []
+        },
+        composicao: {
+          label: "Composição",
+          items: []
+        },
+        revisao: {
+          label: "Revisão",
+          items: []
+        },
+        cliente: {
+          label: "Cliente",
+          items: []
+        },
+        aprovado: {
+          label: "Aprovado",
+          items: []
+        }
+      }
+    };
   },
   computed: {
-    ...mapState(["projetoCorrente", "itensProjetoCorrente"])
+    itensProjetoCorrente() {
+      let arr = this.$store.state.itensProjetoCorrente;
+      this.listas = {
+        briefing: {
+          label: "Briefing",
+          items: []
+        },
+        modelagem: {
+          label: "Modelagem",
+          items: []
+        },
+        composicao: {
+          label: "Composição",
+          items: []
+        },
+        revisao: {
+          label: "Revisão",
+          items: []
+        },
+        cliente: {
+          label: "Cliente",
+          items: []
+        },
+        aprovado: {
+          label: "Aprovado",
+          items: []
+        }
+      };
+      arr.forEach(item => {
+        this.listas[item.lista].items.push(item);
+      });
+      return arr;
+    },
+    ...mapState(["projetos"])
   },
   created() {
-    this.$store.dispatch("getProjeto", this.$route.params.id.toUpperCase());
+    if (!this.projetos.length)
+      this.$store.dispatch("listaProjetos", this.$route.params.id);
+
+    unsubscribe = this.$store.dispatch(
+      "getItensProjeto",
+      this.$route.params.id.toUpperCase()
+    );
   },
   methods: {
-    onEnd(ev) {
+    onDragEnd(ev) {
       let payload = {
         id: ev.item.id,
         lista: ev.to.id
@@ -44,6 +113,12 @@ export default {
         console.error("Erro atualizando documento: ", error);
       });
     }
+  },
+  destroyed() {
+    unsubscribe.then(fn => {
+      fn();
+      this.$store.commit("PROCESSA_SNAPSHOT_ITEMS", null);
+    });
   }
 };
 </script>
