@@ -1,13 +1,14 @@
 <template>
-    <div class="item-card">
+    <router-link :to="linkTo" tag="div" append class="item-card">
         <slot name="img"></slot>
         <slot></slot>  
-    </div>
+    </router-link>
 </template>
 
 <script>
 export default {
-  name: "cardItem"
+  name: "cardItem",
+  props: ["linkTo"]
 };
 </script>
 
