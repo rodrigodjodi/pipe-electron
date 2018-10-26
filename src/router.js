@@ -4,6 +4,7 @@ import Router from "vue-router";
 import Projetos from "@/pages/ProjetosView";
 import Projeto from "@/pages/ProjetoView";
 import Caixa from "@/pages/CaixaView";
+import ItemView from "@/pages/ItemView";
 import Login from "@/components/Login";
 import SignUp from "@/components/SignUp";
 import FormProjeto from "@/components/FormProjeto";
@@ -17,11 +18,11 @@ let router = new Router({
   routes: [
     {
       path: "*",
-      redirect: "/login"
+      redirect: "/projetos"
     },
     {
       path: "/",
-      redirect: "/login"
+      redirect: "/projetos"
     },
     {
       path: "/login",
@@ -47,8 +48,15 @@ let router = new Router({
       name: "Projeto",
       components: { default: Projeto, rightDrawer: FormItemProjeto },
       meta: {
-        requiresAuth: true,
-        title: "Projeto"
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/projetos/:id/:item",
+      name: "Item",
+      components: { default: ItemView, rightDrawer: null },
+      meta: {
+        requiresAuth: true
       }
     },
     {
@@ -68,7 +76,7 @@ router.beforeEach((to, from, next) => {
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (requiresAuth && !currentUser) next("login");
-  else if (!requiresAuth && currentUser) next("projetos");
+  else if (!requiresAuth && currentUser) next();
   else next();
 });
 
