@@ -31,7 +31,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
   if (user) {
     store.commit("SET_USER", user);
-    router.replace("projetos");
   } else {
     store.commit("SET_USER", null);
     router.replace("/login");
