@@ -1,15 +1,29 @@
 <template>
-    <h1>{{itensProjetoCorrente[$route.params.item].nome}}</h1>
+<v-container>
+  <v-layout>
+    
+
+  </v-layout>
+</v-container>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
   name: "ItemView",
-  computed: {
-    ...mapState(["itensProjetoCorrente"])
+  props: ["idItem", "idProjeto"],
+  data() {
+    return {
+      item: {}
+    };
   },
-  created() {}
+  created() {
+    const ref = `projetos/${this.idProjeto}/items/${this.idItem}`;
+    this.$store.dispatch("getDoc", ref).then(doc => {
+      this.item = doc;
+      this.$store.commit("SET_TITLE", doc.nome);
+    });
+  }
 };
 </script>
 

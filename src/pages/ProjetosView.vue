@@ -32,9 +32,7 @@ export default {
   computed: {
     ...mapState(["projetos"])
   },
-  created() {
-    if (!this.projetos.length) this.$store.dispatch("listaProjetos");
-  },
+  created() {},
   methods: {}
 };
 </script>

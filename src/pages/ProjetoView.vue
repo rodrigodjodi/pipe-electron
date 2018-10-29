@@ -28,8 +28,10 @@ var unsubscribe;
 export default {
   components: { draggable, CardItem },
   name: "Projeto",
+  props: ["idProjeto"],
   data() {
     return {
+      projeto: {},
       listas: {
         briefing: {
           label: "Briefing",
@@ -59,9 +61,33 @@ export default {
     };
   },
   computed: {
-    itensProjetoCorrente() {
-      let arr = this.$store.state.itensProjetoCorrente;
-      this.listas = {
+    ...mapState(["projetos", "itensProjetoCorrente"])
+  },
+  created() {
+    const ref = `projetos/${this.idProjeto}`;
+    this.$store.dispatch("getDoc", ref).then(doc => {
+      this.projeto = doc;
+      const stringProjeto =
+        this.idProjeto + "_" + this.projeto.nome + "_" + this.projeto.cliente;
+      this.$store.commit("SET_TITLE", stringProjeto);
+    });
+    unsubscribe = this.$store.dispatch("getItensProjeto", this.idProjeto);
+  },
+  mounted() {},
+  methods: {
+    onDragEnd(ev) {
+      let payload = {
+        path: `projetos/${this.idProjeto}/items/${ev.item.id}`,
+        changes: { lista: ev.to.id }
+      };
+      this.$store.dispatch("updateItem", payload).catch(function(error) {
+        console.error("Erro atualizando documento: ", error);
+      });
+    }
+  },
+  watch: {
+    itensProjetoCorrente(arr) {
+      let listas = {
         briefing: {
           label: "Briefing",
           items: []
@@ -88,37 +114,20 @@ export default {
         }
       };
       arr.forEach(item => {
-        this.listas[item.lista].items.push(item);
+        listas[item.lista].items.push(item);
       });
-      return arr;
-    },
-    ...mapState(["projetos"])
-  },
-  created() {
-    if (!this.projetos.length)
-      this.$store.dispatch("listaProjetos", this.$route.params.id);
-
-    unsubscribe = this.$store.dispatch(
-      "getItensProjeto",
-      this.$route.params.id.toUpperCase()
-    );
-  },
-  methods: {
-    onDragEnd(ev) {
-      let payload = {
-        id: ev.item.id,
-        lista: ev.to.id
-      };
-      this.$store.dispatch("updateItem", payload).catch(function(error) {
-        console.error("Erro atualizando documento: ", error);
-      });
+      this.listas = listas;
     }
   },
-  destroyed() {
-    unsubscribe.then(fn => {
-      fn();
-      this.$store.commit("PROCESSA_SNAPSHOT_ITEMS", null);
-    });
+  beforeRouteLeave(to, from, next) {
+    if (from.params.idProjeto !== to.params.idProjeto) {
+      unsubscribe.then(fn => {
+        fn();
+        this.$store.commit("PROCESSA_SNAPSHOT_ITEMS", null);
+        this.$store.commit("SET_TITLE", null);
+      });
+    }
+    next();
   }
 };
 </script>

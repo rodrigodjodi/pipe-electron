@@ -20,7 +20,6 @@ export default new Vuex.Store({
     title: "",
     //PROJETOS
     projetos: [],
-    projetoCorrente: null,
     //Itens
     itensProjetoCorrente: null
   },
@@ -72,13 +71,9 @@ export default new Vuex.Store({
       firebase.auth().signOut();
     },
     //AÇÕES DE PROJETO
-    listaProjetos({ commit, state }, project_id) {
+    listaProjetos({ commit }) {
       db.collection("projetos").onSnapshot(snap => {
         commit("PROCESSA_SNAPSHOT_PROJETOS", snap);
-        if (project_id) {
-          var projeto = state.projetos.find(el => el.codigo === project_id);
-          commit("SET_PROJETO_CORRENTE", projeto);
-        }
       });
     },
     getItensProjeto({ commit }, projeto) {
@@ -103,6 +98,14 @@ export default new Vuex.Store({
         });
     },
     //Ações de itens
+    getDoc({}, refPath) {
+      return db
+        .doc(refPath)
+        .get()
+        .then(doc => {
+          return doc.data();
+        });
+    },
     createDefaultItems({ state }, payload) {
       var batch = db.batch();
       Object.keys(payload).forEach(tipoItem => {
@@ -134,13 +137,9 @@ export default new Vuex.Store({
           console.error(err);
         });
     },
-    updateItem({ state }, payload) {
-      let ref = db
-        .collection("projetos")
-        .doc(state.projetoCorrente.codigo)
-        .collection("items")
-        .doc(payload.id);
-      return ref.update({ lista: payload.lista });
+    updateItem({}, payload) {
+      let ref = db.doc(payload.path);
+      return ref.update(payload.changes);
     }
   }
 });
