@@ -120,6 +120,9 @@ export default {
         this.mini = !this.mini;
       }
     }
+  },
+  created() {
+    this.$store.dispatch("listaProjetos");
   }
 };
 </script>
