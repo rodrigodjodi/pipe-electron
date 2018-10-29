@@ -44,17 +44,19 @@ let router = new Router({
       }
     },
     {
-      path: "/projetos/:id",
+      path: "/projetos/:idProjeto",
       name: "Projeto",
       components: { default: Projeto, rightDrawer: FormItemProjeto },
+      props: { default: true, rightDrawer: false },
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: "/projetos/:id/:item",
+      path: "/projetos/:idProjeto/:idItem",
       name: "Item",
       components: { default: ItemView, rightDrawer: null },
+      props: { default: true, rightDrawer: false },
       meta: {
         requiresAuth: true
       }
