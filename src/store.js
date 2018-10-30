@@ -21,7 +21,8 @@ export default new Vuex.Store({
     //PROJETOS
     projetos: [],
     //Itens
-    itensProjetoCorrente: null
+    itensProjetoCorrente: null,
+    tarefasProjetoCorrente: null
   },
 
   mutations: {
@@ -55,10 +56,41 @@ export default new Vuex.Store({
           state.itensProjetoCorrente.push(newItem);
         });
       }
+    },
+    //TAREFAS
+    PROCESSA_SNAPSHOT_TAREFAS(state, snap) {
+      if (!snap) {
+        state.tarefasProjetoCorrente = null;
+      } else {
+        state.tarefasProjetoCorrente = [];
+        snap.forEach(doc => {
+          let newTask = doc.data();
+          newTask.codigo = doc.id;
+          state.tarefasProjetoCorrente.push(newTask);
+        });
+      }
     }
   },
 
   actions: {
+    //Ações genéricas de banco de dados
+    getDoc({}, refPath) {
+      return db
+        .doc(refPath)
+        .get()
+        .then(doc => {
+          return doc.data();
+        });
+    },
+    getTarefasProjeto({ commit }, idProjeto) {
+      return db
+        .collection("projetos")
+        .doc(idProjeto)
+        .collection("tarefas")
+        .onSnapshot(snap => {
+          commit("PROCESSA_SNAPSHOT_TAREFAS", snap);
+        });
+    },
     //USER ACTIONS
     /* eslint-disable no-empty-pattern */
     signIn: function({}, payload) {
@@ -97,15 +129,8 @@ export default new Vuex.Store({
           criado: firebase.firestore.FieldValue.serverTimestamp()
         });
     },
+
     //Ações de itens
-    getDoc({}, refPath) {
-      return db
-        .doc(refPath)
-        .get()
-        .then(doc => {
-          return doc.data();
-        });
-    },
     createDefaultItems({ state }, payload) {
       var batch = db.batch();
       Object.keys(payload).forEach(tipoItem => {

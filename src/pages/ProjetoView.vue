@@ -24,7 +24,8 @@
 import { mapState, mapActions } from "vuex";
 import draggable from "vuedraggable";
 import CardItem from "@/components/CardItem";
-var unsubscribe;
+var unsubscribeItens;
+var unsubscribeTarefas;
 export default {
   components: { draggable, CardItem },
   name: "Projeto",
@@ -71,7 +72,11 @@ export default {
         this.idProjeto + "_" + this.projeto.nome + "_" + this.projeto.cliente;
       this.$store.commit("SET_TITLE", stringProjeto);
     });
-    unsubscribe = this.$store.dispatch("getItensProjeto", this.idProjeto);
+    unsubscribeItens = this.$store.dispatch("getItensProjeto", this.idProjeto);
+    unsubscribeTarefas = this.$store.dispatch(
+      "getTarefasProjeto",
+      this.idProjeto
+    );
   },
   mounted() {},
   methods: {
@@ -120,11 +125,15 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
+    this.$store.commit("SET_TITLE", null);
     if (from.params.idProjeto !== to.params.idProjeto) {
-      unsubscribe.then(fn => {
+      unsubscribeItens.then(fn => {
         fn();
         this.$store.commit("PROCESSA_SNAPSHOT_ITEMS", null);
-        this.$store.commit("SET_TITLE", null);
+      });
+      unsubscribeTarefas.then(fn => {
+        fn();
+        this.$store.commit("PROCESSA_SNAPSHOT_TAREFAS", null);
       });
     }
     next();
