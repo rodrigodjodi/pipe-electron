@@ -165,6 +165,11 @@ export default new Vuex.Store({
     updateItem({}, payload) {
       let ref = db.doc(payload.path);
       return ref.update(payload.changes);
+    },
+    //Ações de tarefas
+    novaTarefa({}, payload) {
+      payload.tarefa.criado = firebase.firestore.FieldValue.serverTimestamp();
+      return db.collection(payload.path).add(payload.tarefa);
     }
   }
 });
