@@ -32,37 +32,46 @@ export default {
   props: ["idProjeto"],
   data() {
     return {
-      projeto: {},
-      listas: {
-        briefing: {
-          label: "Briefing",
-          items: []
-        },
-        modelagem: {
-          label: "Modelagem",
-          items: []
-        },
-        composicao: {
-          label: "Composição",
-          items: []
-        },
-        revisao: {
-          label: "Revisão",
-          items: []
-        },
-        cliente: {
-          label: "Cliente",
-          items: []
-        },
-        aprovado: {
-          label: "Aprovado",
-          items: []
-        }
-      }
+      projeto: {}
     };
   },
   computed: {
-    ...mapState(["projetos", "itensProjetoCorrente"])
+    ...mapState(["projetos"]),
+    listas: {
+      get() {
+        let lists = {
+          briefing: {
+            label: "Briefing",
+            items: []
+          },
+          modelagem: {
+            label: "Modelagem",
+            items: []
+          },
+          composicao: {
+            label: "Composição",
+            items: []
+          },
+          revisao: {
+            label: "Revisão",
+            items: []
+          },
+          cliente: {
+            label: "Cliente",
+            items: []
+          },
+          aprovado: {
+            label: "Aprovado",
+            items: []
+          }
+        };
+        this.$store.state.itensProjetoCorrente.forEach(el => {
+          lists[el.lista].items.push(el);
+        });
+        return lists;
+      },
+      set(newValue) {}
+    }
   },
   created() {
     const ref = `projetos/${this.idProjeto}`;
@@ -88,40 +97,6 @@ export default {
       this.$store.dispatch("updateItem", payload).catch(function(error) {
         console.error("Erro atualizando documento: ", error);
       });
-    }
-  },
-  watch: {
-    itensProjetoCorrente(arr) {
-      let listas = {
-        briefing: {
-          label: "Briefing",
-          items: []
-        },
-        modelagem: {
-          label: "Modelagem",
-          items: []
-        },
-        composicao: {
-          label: "Composição",
-          items: []
-        },
-        revisao: {
-          label: "Revisão",
-          items: []
-        },
-        cliente: {
-          label: "Cliente",
-          items: []
-        },
-        aprovado: {
-          label: "Aprovado",
-          items: []
-        }
-      };
-      arr.forEach(item => {
-        listas[item.lista].items.push(item);
-      });
-      this.listas = listas;
     }
   },
   beforeRouteLeave(to, from, next) {
