@@ -27,6 +27,7 @@
           <v-icon
             small
             class="mr-2"
+            @click="apagaTarefa(props.item.codigo)"
           >
             delete
           </v-icon>
@@ -96,6 +97,10 @@ export default {
     },
     editTarefa() {
       console.log("editing");
+    },
+    apagaTarefa(codigo) {
+      let path = `projetos/${this.idProjeto}/tarefas/${codigo}`;
+      this.$store.dispatch("deleteDoc", path);
     }
   }
 };
