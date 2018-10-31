@@ -21,8 +21,8 @@ export default new Vuex.Store({
     //PROJETOS
     projetos: [],
     //Itens
-    itensProjetoCorrente: null,
-    tarefasProjetoCorrente: null
+    itensProjetoCorrente: [],
+    tarefasProjetoCorrente: []
   },
 
   mutations: {
@@ -47,7 +47,7 @@ export default new Vuex.Store({
     //ITENS
     PROCESSA_SNAPSHOT_ITEMS(state, snap) {
       if (!snap) {
-        state.itensProjetoCorrente = null;
+        state.itensProjetoCorrente = [];
       } else {
         state.itensProjetoCorrente = [];
         snap.forEach(doc => {
@@ -84,6 +84,10 @@ export default new Vuex.Store({
     },
     deleteDoc({}, refPath) {
       return db.doc(refPath).delete();
+    },
+    updateDoc({}, payload) {
+      let ref = db.doc(payload.path);
+      return ref.update(payload.changes);
     },
     getTarefasProjeto({ commit }, idProjeto) {
       return db
@@ -165,10 +169,7 @@ export default new Vuex.Store({
           console.error(err);
         });
     },
-    updateItem({}, payload) {
-      let ref = db.doc(payload.path);
-      return ref.update(payload.changes);
-    },
+
     //Ações de tarefas
     novaTarefa({}, payload) {
       payload.tarefa.criado = firebase.firestore.FieldValue.serverTimestamp();

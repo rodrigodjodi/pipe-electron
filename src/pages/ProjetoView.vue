@@ -94,7 +94,7 @@ export default {
         path: `projetos/${this.idProjeto}/items/${ev.item.id}`,
         changes: { lista: ev.to.id }
       };
-      this.$store.dispatch("updateItem", payload).catch(function(error) {
+      this.$store.dispatch("updateDoc", payload).catch(function(error) {
         console.error("Erro atualizando documento: ", error);
       });
     }
