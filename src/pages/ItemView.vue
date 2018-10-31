@@ -10,12 +10,12 @@
       <template slot="items" slot-scope="props">
         <td class="px-3">
           <v-checkbox
-            :input-value="props.item.done"
+            v-model="props.item.done"
             hide-details
-             
+            @change="toggleTarefa({codigo: props.item.codigo, done: props.item.done})"
           ></v-checkbox>
         </td>
-        <td class="px-2" @click="editTarefa">{{ props.item.text }}</td>
+        <td class="px-2">{{ props.item.text }}</td>
         <td class=" px-0">
           <v-icon
             small
@@ -95,8 +95,12 @@ export default {
           console.error("Error adding document: ", error);
         });
     },
-    editTarefa() {
-      console.log("editing");
+    toggleTarefa(item) {
+      let payload = {
+        path: `projetos/${this.idProjeto}/tarefas/${item.codigo}`,
+        changes: { done: item.done }
+      };
+      this.$store.dispatch("updateDoc", payload);
     },
     apagaTarefa(codigo) {
       let path = `projetos/${this.idProjeto}/tarefas/${codigo}`;
