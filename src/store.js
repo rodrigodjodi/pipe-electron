@@ -82,6 +82,9 @@ export default new Vuex.Store({
           return doc.data();
         });
     },
+    deleteDoc({}, refPath) {
+      return db.doc(refPath).delete();
+    },
     getTarefasProjeto({ commit }, idProjeto) {
       return db
         .collection("projetos")
