@@ -16,6 +16,7 @@
           ></v-checkbox>
         </td>
         <td class="px-2">{{ props.item.text }}</td>
+        <td class="px-2">{{ props.item.criadaPor }}</td>
         <td class=" px-0">
           <v-icon
             small
@@ -65,12 +66,13 @@ export default {
       tarefa: {
         text: "",
         item: this.idItem,
-        done: false
+        done: false,
+        criadaPor: ""
       }
     };
   },
   computed: {
-    ...mapState(["tarefasProjetoCorrente"])
+    ...mapState(["tarefasProjetoCorrente", "user"])
   },
   created() {
     const ref = `projetos/${this.idProjeto}/items/${this.idItem}`;
@@ -81,6 +83,7 @@ export default {
   },
   methods: {
     novaTarefa() {
+      this.tarefa.criadaPor = this.user.uid;
       let payload = {
         path: `projetos/${this.idProjeto}/tarefas`,
         tarefa: this.tarefa
