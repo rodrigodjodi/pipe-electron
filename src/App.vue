@@ -49,7 +49,12 @@
       </v-btn>
       <v-menu bottom left>
         <v-avatar slot="activator">
-          <v-icon dark>account_circle</v-icon>
+          <img
+              v-if="user.photoURL"
+              :src="user.photoURL"
+              alt="Imagem associada à conta."
+            >
+          <v-icon v-else dark>account_circle</v-icon>
         </v-avatar>
         <v-list>
           <v-list-tile @click="logout">
@@ -121,8 +126,6 @@ export default {
       }
     }
   },
-  created() {
-    this.$store.dispatch("listaProjetos");
-  }
+  created() {}
 };
 </script>
