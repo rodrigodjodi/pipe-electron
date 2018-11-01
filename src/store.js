@@ -100,12 +100,6 @@ export default new Vuex.Store({
     },
     //USER ACTIONS
     /* eslint-disable no-empty-pattern */
-    signIn: function({}, payload) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(payload.email, payload.password);
-      //* não é feito o commit do user aqui porque isso será feito no listener em main.js
-    },
     logout() {
       firebase.auth().signOut();
     },

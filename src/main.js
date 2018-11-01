@@ -20,6 +20,27 @@ let config = {
   messagingSenderId: "1085230371223"
 };
 firebase.initializeApp(config);
+
+if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+  var email =
+    window.localStorage.getItem("emailForSignIn") ||
+    window.prompt("Please provide your email for confirmation");
+  firebase
+    .auth()
+    .signInWithEmailLink(email, window.location.href)
+    .then(function(result) {
+      window.localStorage.removeItem("emailForSignIn");
+      // You can access the new user via result.user
+      // Additional user info profile not available via:
+      // result.additionalUserInfo.profile == null
+      // You can check if the user is new or existing:
+      // result.additionalUserInfo.isNewUser
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
 firebase.auth().onAuthStateChanged(function(user) {
   if (!app) {
     /* eslint-disable no-new */
